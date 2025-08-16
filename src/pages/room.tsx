@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { QuestionForm } from '@/components/question-form'
 import { Button } from '@/components/ui/button'
 import { QuestionList } from '@/components/question-list'
+import { useRooms } from "@/http/use-rooms";
 
 
 type RoomParams = {
@@ -12,12 +13,17 @@ type RoomParams = {
 export function Room() {
   const params = useParams<RoomParams>()
 
+  const { data } = useRooms()
+
   if (!params.roomId) {
     return <Navigate replace to="/" />
   }
 
 
   return (
+
+  
+
     <div className="min-h-screen bg-zinc-950">
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <div className="mb-8">
@@ -35,9 +41,14 @@ export function Room() {
               </Button>
             </Link>
           </div>
-          <h1 className="mb-2 font-bold text-3xl text-foreground">
-            Sala de Perguntas
-          </h1>
+          <div>
+            {data?.map((room) => room.id === params.roomId ? (
+              <h1 className="mb-2 font-bold text-3xl text-foreground">
+                Sala de Perguntas - {room.name}
+              </h1>
+            ) : null)}
+          </div>
+        
           <p className="text-muted-foreground">
             Faça perguntas e receba respostas com IA
           </p>
@@ -50,5 +61,5 @@ export function Room() {
         <QuestionList roomId={params.roomId}/>
       </div>
     </div>
-  )
-}
+  )}
+ 
